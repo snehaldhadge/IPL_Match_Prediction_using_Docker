@@ -1,0 +1,29 @@
+version: "3.1"
+services:
+  my-db:
+    image: linuxserver/mariadb:latest
+    container_name: my-db
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_USER="root"
+      - MYSQL_ALLOW_EMPTY_PASSWORD="true"
+    volumes:
+      - ./dbdata:/config
+    restart: unless-stopped
+    networks:
+      my-network:
+  final_project:
+    container_name: final_project
+    depends_on:
+      - my-db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./Output-File:/Output-File
+    image: final_project
+    networks:
+      my-network:
+networks:
+  my-network:
